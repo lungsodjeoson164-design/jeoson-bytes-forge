@@ -77,14 +77,21 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { title: "Jeoson Lungsod — IT Assistant · Cybersecurity" },
+      {
+        name: "description",
+        content:
+          "Portfolio of Jeoson Lungsod, IT assistant focused on cybersecurity — threat intel, network analysis, and security monitoring.",
+      },
+      { name: "author", content: "Jeoson Lungsod" },
+      { property: "og:title", content: "Jeoson Lungsod — IT Assistant · Cybersecurity" },
+      {
+        property: "og:description",
+        content:
+          "IT assistant focused on cybersecurity: threat intelligence, network analysis, and security monitoring.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:site", content: "@Lovable" },
     ],
     links: [
       {

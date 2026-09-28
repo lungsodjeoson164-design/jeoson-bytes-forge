@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -96,6 +96,12 @@ const EXPERIENCE = [
   },
 ];
 
+const SOCIALS = {
+  email: "hello@jeosonlungsod.dev",
+  github: "https://github.com/lungsodjeoson164-design",
+  linkedin: "https://www.linkedin.com/in/jeoson-lungsod",
+};
+
 /* --------------------------------- hooks --------------------------------- */
 
 function useTypewriter() {
@@ -141,6 +147,61 @@ function useReveal() {
   }, []);
 }
 
+function useScrollProgress() {
+  const [progress, setProgress] = useState(0);
+
+  useEffect(() => {
+    const onScroll = () => {
+      const scrollTop = window.scrollY;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      setProgress(docHeight > 0 ? scrollTop / docHeight : 0);
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  return progress;
+}
+
+function useActiveSection() {
+  const [activeId, setActiveId] = useState<string>("");
+
+  useEffect(() => {
+    const sections = NAV_LINKS.map((link) => {
+      const el = document.querySelector(link.href);
+      return el ? { id: link.href.slice(1), el: el as HTMLElement } : null;
+    }).filter(Boolean) as { id: string; el: HTMLElement }[];
+
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setActiveId(entry.target.id);
+          }
+        });
+      },
+      { rootMargin: "-45% 0px -45% 0px" },
+    );
+
+    sections.forEach((s) => io.observe(s.el));
+    return () => io.disconnect();
+  }, []);
+
+  return activeId;
+}
+
+function useLockBody(locked: boolean) {
+  useEffect(() => {
+    if (!locked) return;
+    const original = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = original;
+    };
+  }, [locked]);
+}
+
 /* ------------------------------- components ------------------------------ */
 
 function ScanOverlay() {
@@ -152,29 +213,107 @@ function ScanOverlay() {
   );
 }
 
-function Nav() {
+function ScrollProgress({ progress }: { progress: number }) {
   return (
-    <header className="fixed inset-x-0 top-0 z-50 border-b border-border bg-background/80 backdrop-blur-md">
+    <div
+      className="scroll-progress"
+      style={{ transform: `scaleX(${progress})` }}
+      aria-hidden="true"
+    />
+  );
+}
+
+function Nav() {
+  const activeId = useActiveSection();
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useLockBody(mobileOpen);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 40);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  const closeMenu = useCallback(() => setMobileOpen(false), []);
+
+  return (
+    <header
+      className={`fixed inset-x-0 top-0 z-50 border-b border-border bg-background/80 backdrop-blur-md transition-shadow ${
+        scrolled ? "shadow-[0_4px_30px_rgba(0,0,0,0.3)]" : ""
+      }`}
+    >
       <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-6">
-        <a href="#top" className="font-display text-sm font-bold tracking-widest text-primary text-glow">
+        <a
+          href="#top"
+          className="font-display text-sm font-bold tracking-widest text-primary text-glow focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary"
+          aria-label="Back to top"
+        >
           JL<span className="text-accent">://</span>
         </a>
-        <nav className="hidden items-center gap-7 md:flex">
-          {NAV_LINKS.map((link) => (
-            <a
-              key={link.href}
-              href={link.href}
-              className="text-sm text-muted-foreground transition-colors hover:text-primary"
-            >
-              <span className="text-accent">/</span>
-              {link.label}
-            </a>
-          ))}
+        <nav className="hidden items-center gap-7 md:flex" aria-label="Main navigation">
+          {NAV_LINKS.map((link) => {
+            const isActive = activeId === link.href.slice(1);
+            return (
+              <a
+                key={link.href}
+                href={link.href}
+                aria-current={isActive ? "true" : undefined}
+                className={`text-sm transition-colors hover:text-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary ${
+                  isActive ? "text-primary" : "text-muted-foreground"
+                }`}
+              >
+                <span className="text-accent">/</span>
+                {link.label}
+              </a>
+            );
+          })}
         </nav>
-        <div className="flex items-center gap-2 text-xs text-terminal">
-          <span className="blink inline-block h-2 w-2 rounded-full bg-terminal" />
-          <span className="hidden sm:inline">ONLINE</span>
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 text-xs text-terminal">
+            <span className="blink inline-block h-2 w-2 rounded-full bg-terminal" />
+            <span className="hidden sm:inline">ONLINE</span>
+          </div>
+          <button
+            type="button"
+            className="nav-toggle md:hidden"
+            aria-label={mobileOpen ? "Close menu" : "Open menu"}
+            aria-expanded={mobileOpen}
+            aria-controls="mobile-menu"
+            onClick={() => setMobileOpen((v) => !v)}
+          >
+            <span className={`nav-toggle-bar ${mobileOpen ? "open" : ""}`} />
+            <span className={`nav-toggle-bar ${mobileOpen ? "open" : ""}`} />
+            <span className={`nav-toggle-bar ${mobileOpen ? "open" : ""}`} />
+          </button>
         </div>
+      </div>
+      <div
+        id="mobile-menu"
+        className={`mobile-menu md:hidden ${mobileOpen ? "open" : ""}`}
+        aria-hidden={!mobileOpen}
+      >
+        <nav className="flex flex-col gap-2 px-6 py-6" aria-label="Mobile navigation">
+          {NAV_LINKS.map((link) => {
+            const isActive = activeId === link.href.slice(1);
+            return (
+              <a
+                key={link.href}
+                href={link.href}
+                onClick={closeMenu}
+                aria-current={isActive ? "true" : undefined}
+                className={`flex items-center gap-3 py-3 text-sm transition-colors hover:text-primary ${
+                  isActive ? "text-primary" : "text-muted-foreground"
+                }`}
+              >
+                <span className="text-accent">/</span>
+                {link.label}
+              </a>
+            );
+          })}
+        </nav>
       </div>
     </header>
   );
@@ -256,13 +395,13 @@ function Hero() {
         <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
           <a
             href="#projects"
-            className="bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground transition-shadow hover:shadow-[0_0_24px_var(--ring)]"
+            className="cyber-btn-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary"
           >
             view_projects
           </a>
           <a
             href="#contact"
-            className="border border-primary/50 px-6 py-3 text-sm font-semibold text-primary transition-colors hover:bg-primary/10"
+            className="cyber-btn-outline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary"
           >
             initialize_contact
           </a>
@@ -463,22 +602,24 @@ function Contact() {
         </p>
         <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
           <a
-            href="mailto:hello@jeosonlungsod.dev"
-            className="bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground transition-shadow hover:shadow-[0_0_24px_var(--ring)]"
+            href={`mailto:${SOCIALS.email}`}
+            className="cyber-btn-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary"
           >
             send_message
           </a>
           <a
-            href="https://github.com/lungsodjeoson164-design"
+            href={SOCIALS.github}
             target="_blank"
             rel="noreferrer"
-            className="border border-primary/50 px-6 py-3 text-sm font-semibold text-primary transition-colors hover:bg-primary/10"
+            className="cyber-btn-outline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary"
           >
             github
           </a>
           <a
-            href="#top"
-            className="border border-primary/50 px-6 py-3 text-sm font-semibold text-primary transition-colors hover:bg-primary/10"
+            href={SOCIALS.linkedin}
+            target="_blank"
+            rel="noreferrer"
+            className="cyber-btn-outline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary"
           >
             linkedin
           </a>
@@ -505,11 +646,36 @@ function Footer() {
   );
 }
 
+function BackToTop() {
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setVisible(window.scrollY > 600);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  if (!visible) return null;
+
+  return (
+    <button
+      type="button"
+      onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+      className="back-to-top"
+      aria-label="Back to top"
+    >
+      ↑
+    </button>
+  );
+}
+
 function Index() {
   useReveal();
+  const scrollProgress = useScrollProgress();
 
   return (
     <div className="relative min-h-screen bg-background text-foreground">
+      <ScrollProgress progress={scrollProgress} />
       <ScanOverlay />
       <Nav />
       <main>
@@ -521,6 +687,7 @@ function Index() {
         <Contact />
       </main>
       <Footer />
+      <BackToTop />
     </div>
   );
 }

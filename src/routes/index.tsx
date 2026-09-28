@@ -98,6 +98,41 @@ const PROJECTS = [
     ],
     stack: ["SIEM", "EDR", "Firewall Logs", "MITRE ATT&CK", "SBAR"],
   },
+  {
+    id: "011",
+    name: "Splunk Security Analytics",
+    context: "BOTS v2 Security Overview",
+    desc: "Built and reviewed a Splunk dashboard for the Boss of the SOC v2 dataset, turning high-volume security events into filterable visual summaries and searchable event evidence.",
+    highlights: [
+      "Summarized 68,870,348 events with filters for sourcetype, host, and time range.",
+      "Compared event distribution by sourcetype, host, and hour of day.",
+      "Reviewed recent HTTP event details across timestamp, host, source, and sourcetype fields.",
+    ],
+    stack: ["Splunk", "BOTS v2", "SPL", "Dashboarding", "Log Analysis"],
+    gallery: [
+      {
+        src: "/images/projects/splunk-overview.png",
+        caption: "BOTS v2 Security Overview",
+        alt: "Splunk dashboard with sourcetype, host, and time range filters showing a total of 68,870,348 events.",
+        width: 1802,
+        height: 502,
+      },
+      {
+        src: "/images/projects/splunk-panels.png",
+        caption: "Panel A — Events by Sourcetype",
+        alt: "Three pie charts showing events by sourcetype, events by host, and events by hour of day.",
+        width: 1800,
+        height: 423,
+      },
+      {
+        src: "/images/projects/splunk-events.png",
+        caption: "Recent Event Detail",
+        alt: "Table of recent stream:http events from host jabbah with time, host, source, and sourcetype columns.",
+        width: 1792,
+        height: 544,
+      },
+    ],
+  },
 ];
 
 const EXPERIENCE = [
@@ -597,6 +632,39 @@ function Projects() {
                   </li>
                 ))}
               </ul>
+              {"gallery" in project && project.gallery && (
+                <div className="mt-5 flex flex-col gap-4">
+                  {project.gallery.map((shot) => (
+                    <figure
+                      key={shot.src}
+                      className="border border-border bg-background/40 p-2"
+                    >
+                      <a
+                        href={shot.src}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label={`Open full-size screenshot: ${shot.caption}`}
+                      >
+                        <img
+                          src={shot.src}
+                          alt={shot.alt}
+                          width={shot.width}
+                          height={shot.height}
+                          loading="lazy"
+                          decoding="async"
+                          className="h-auto w-full"
+                        />
+                      </a>
+                      <figcaption className="mt-2 text-xs text-primary">
+                        <span aria-hidden="true" className="text-accent">
+                          {"// "}
+                        </span>
+                        {shot.caption}
+                      </figcaption>
+                    </figure>
+                  ))}
+                </div>
+              )}
               <div className="mt-5 flex flex-wrap gap-2">
                 {project.stack.map((tech) => (
                   <span key={tech} className="chip">

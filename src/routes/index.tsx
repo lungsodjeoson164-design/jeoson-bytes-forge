@@ -4,17 +4,17 @@ import { useEffect, useState } from "react";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Jeoson Lungsod — Full-Stack Developer" },
+      { title: "Jeoson Lungsod — IT Assistant · Cybersecurity" },
       {
         name: "description",
         content:
-          "Portfolio of Jeoson Lungsod, full-stack developer building fast, resilient web applications and sharp interfaces.",
+          "Portfolio of Jeoson Lungsod, IT assistant focused on cybersecurity — threat intel, network analysis, and security monitoring.",
       },
-      { property: "og:title", content: "Jeoson Lungsod — Full-Stack Developer" },
+      { property: "og:title", content: "Jeoson Lungsod — IT Assistant · Cybersecurity" },
       {
         property: "og:description",
         content:
-          "Full-stack developer building fast, resilient web applications and sharp interfaces.",
+          "IT assistant focused on cybersecurity: threat intelligence, network analysis, and security monitoring.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -27,8 +27,8 @@ export const Route = createFileRoute("/")({
 
 const TERMINAL_LINES = [
   { cmd: "whoami", out: "jeoson_lungsod" },
-  { cmd: "cat ./role.txt", out: "Full-Stack Developer" },
-  { cmd: "./status --now", out: "open to new opportunities" },
+  { cmd: "cat ./role.txt", out: "IT Assistant · Cybersecurity" },
+  { cmd: "./status --now", out: "open to work" },
 ];
 
 const NAV_LINKS = [
@@ -41,73 +41,57 @@ const NAV_LINKS = [
 
 const SKILLS = [
   {
-    label: "frontend",
-    items: ["React", "TypeScript", "Next.js", "Tailwind CSS", "TanStack"],
+    label: "threat_intel",
+    items: ["VirusTotal", "Shodan"],
   },
   {
-    label: "backend",
-    items: ["Node.js", "Python", "PostgreSQL", "GraphQL", "Redis"],
+    label: "monitoring_analysis",
+    items: ["Splunk", "Wireshark"],
   },
   {
-    label: "infra_tools",
-    items: ["Docker", "AWS", "CI/CD", "Git", "Linux"],
+    label: "security_platforms",
+    items: ["Kali Linux"],
   },
 ];
 
 const PROJECTS = [
   {
     id: "001",
-    name: "Nexus Commerce",
-    desc: "Headless e-commerce platform with real-time inventory sync and sub-second checkout flows.",
-    stack: ["React", "Node.js", "PostgreSQL", "Stripe"],
+    name: "SOC Home Lab",
+    desc: "Virtualized security lab for log collection, detection rules and incident-response practice.",
+    stack: ["Splunk", "Kali Linux", "VMs"],
   },
   {
     id: "010",
-    name: "PulseBoard",
-    desc: "Live analytics dashboard streaming millions of events per day over WebSockets.",
-    stack: ["TypeScript", "WebSockets", "Redis", "D3.js"],
+    name: "Threat Intel Triage",
+    desc: "Reputation checks for suspicious files and URLs against VirusTotal, with verdict summaries.",
+    stack: ["VirusTotal", "Automation", "CLI"],
   },
   {
     id: "011",
-    name: "Sentinel API",
-    desc: "Rate-limited auth gateway handling OAuth, MFA and session rotation for multi-tenant apps.",
-    stack: ["Node.js", "OAuth 2.0", "Docker", "AWS"],
+    name: "Exposure Audit",
+    desc: "Shodan-driven sweep of open ports and services on my own network, with hardening notes.",
+    stack: ["Shodan", "Recon", "Reporting"],
   },
   {
     id: "100",
-    name: "Forge CLI",
-    desc: "Developer CLI that scaffolds, tests and deploys full-stack projects from a single config file.",
-    stack: ["Rust", "CLI", "CI/CD", "YAML"],
+    name: "Packet Sleuth",
+    desc: "Wireshark capture exercises: reading handshakes, spotting anomalies and sketchy traffic.",
+    stack: ["Wireshark", "TCP/IP", "pcap"],
   },
 ];
 
 const EXPERIENCE = [
   {
-    period: "2024 — present",
-    role: "Senior Full-Stack Developer",
-    org: "TechNova Labs",
+    period: "present",
+    role: "IT Assistant",
+    org: "",
     points: [
-      "Lead development of a multi-tenant SaaS platform serving 40k+ users.",
-      "Cut API latency 45% by redesigning the data layer and caching strategy.",
-      "Mentor a team of four engineers and run architecture reviews.",
-    ],
-  },
-  {
-    period: "2022 — 2024",
-    role: "Full-Stack Developer",
-    org: "Orbit Digital",
-    points: [
-      "Shipped 12+ client web applications from design handoff to production.",
-      "Built a reusable component library adopted across all company projects.",
-    ],
-  },
-  {
-    period: "2020 — 2022",
-    role: "Frontend Developer",
-    org: "Freelance",
-    points: [
-      "Delivered responsive web apps for startups and small businesses.",
-      "Specialized in performance audits and accessibility fixes.",
+      "Triage suspicious files and URLs with VirusTotal reputation data.",
+      "Map exposed devices and services with Shodan network lookups.",
+      "Monitor logs and hunt anomalies in Splunk.",
+      "Capture and inspect network traffic with Wireshark.",
+      "Practice offensive and defensive security in Kali Linux.",
     ],
   },
 ];
@@ -263,8 +247,8 @@ function Hero() {
           JEOSON LUNGSOD
         </h1>
         <p className="mt-6 max-w-xl text-base text-muted-foreground sm:text-lg">
-          {"//"} Full-Stack Developer — building resilient systems and sharp
-          interfaces for the modern web.
+          {"//"} IT Assistant focused on cybersecurity — monitoring threats,
+          analyzing traffic, and keeping systems locked down.
         </p>
         <div className="mt-10 w-full">
           <Terminal />
@@ -286,13 +270,13 @@ function Hero() {
       </div>
       <div className="absolute bottom-8 z-10 flex gap-10 text-xs text-muted-foreground">
         <span>
-          <span className="text-primary">5+</span> yrs experience
+          <span className="text-primary">Cyber</span>security focus
         </span>
         <span>
-          <span className="text-primary">20+</span> projects shipped
+          <span className="text-primary">Open</span> to work
         </span>
         <span className="hidden sm:inline">
-          <span className="text-primary">100%</span> uptime mindset
+          <span className="text-primary">IT</span> support & monitoring
         </span>
       </div>
     </section>
@@ -319,19 +303,19 @@ function About() {
         <div className="grid gap-10 md:grid-cols-2">
           <div className="space-y-4 text-muted-foreground">
             <p>
-              I'm Jeoson — a full-stack developer who treats every product like
-              a system under load: designed for failure, tuned for speed, and
-              shipped with intent.
+              I'm Jeoson — an IT assistant with a cybersecurity focus. I keep
+              systems running smoothly
+              and watch for anything that shouldn't be running at all.
             </p>
             <p>
-              I work across the whole stack, from pixel-level interface work to
-              database schema design and deployment pipelines. I care about
-              clean architecture, honest performance budgets, and code that the
-              next engineer can actually read.
+              My toolkit covers threat intelligence, network analysis and log
+              monitoring — reputation lookups in VirusTotal, exposure checks in
+              Shodan, packet captures in Wireshark, and hands-on security work
+              in Kali Linux, all tied together in Splunk.
             </p>
             <p>
-              Off the clock I'm usually breaking my own side projects, then
-              writing about why they broke.
+              I'm open to work: IT support, SOC, and security-adjacent roles
+              where both skill sets get used.
             </p>
           </div>
           <div className="panel p-6 text-sm">
@@ -341,10 +325,10 @@ function About() {
             <dl className="space-y-3">
               {[
                 ["name", "Jeoson Lungsod"],
-                ["role", "Full-Stack Developer"],
-                ["focus", "Web platforms & APIs"],
-                ["stack", "TypeScript · Node · Postgres"],
-                ["availability", "Open to opportunities"],
+                ["role", "IT Assistant"],
+                ["focus", "Cybersecurity"],
+                ["stack", "VirusTotal · Shodan · Splunk · Wireshark · Kali"],
+                ["availability", "Open to work"],
               ].map(([key, value]) => (
                 <div key={key} className="flex justify-between gap-4">
                   <dt className="text-accent">{key}</dt>
@@ -444,7 +428,7 @@ function Experience() {
                   </h3>
                   <span className="text-xs text-terminal">{job.period}</span>
                 </div>
-                <p className="mt-1 text-sm text-accent">@ {job.org}</p>
+                {job.org ? <p className="mt-1 text-sm text-accent">@ {job.org}</p> : null}
                 <ul className="mt-4 space-y-2 text-sm text-muted-foreground">
                   {job.points.map((point) => (
                     <li key={point} className="flex gap-2">
@@ -485,7 +469,9 @@ function Contact() {
             send_message
           </a>
           <a
-            href="#top"
+            href="https://github.com/lungsodjeoson164-design"
+            target="_blank"
+            rel="noreferrer"
             className="border border-primary/50 px-6 py-3 text-sm font-semibold text-primary transition-colors hover:bg-primary/10"
           >
             github

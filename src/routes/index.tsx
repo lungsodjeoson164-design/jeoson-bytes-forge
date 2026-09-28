@@ -470,16 +470,17 @@ function Hero() {
   return (
     <section
       id="top"
-      className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-6 pt-14"
+      className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-6 pb-24 pt-20"
     >
       <div className="cyber-grid absolute inset-0" aria-hidden="true" />
-      <div className="relative z-10 flex w-full max-w-5xl flex-col items-center text-center">
+      <div className="relative z-10 grid w-full max-w-6xl items-center gap-12 lg:grid-cols-[1.5fr_1fr]">
+      <div className="flex flex-col items-center text-center lg:items-start lg:text-left">
         <p className="mb-6 text-sm text-muted-foreground">
           <span className="text-accent">&gt;</span> initializing portfolio
           <span className="blink">_</span>
         </p>
         <h1
-          className="glitch font-display text-5xl font-black uppercase tracking-wider text-foreground text-glow sm:text-6xl md:text-7xl"
+          className="glitch font-display text-5xl font-black uppercase tracking-wider text-foreground text-glow sm:text-6xl md:text-7xl lg:text-5xl xl:text-6xl"
           data-text="JEOSON LUNGSOD"
         >
           JEOSON LUNGSOD
@@ -491,7 +492,7 @@ function Hero() {
         <div className="mt-10 w-full">
           <Terminal />
         </div>
-        <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
+        <div className="mt-10 flex flex-wrap items-center justify-center gap-4 lg:justify-start">
           <a
             href="#projects"
             className="cyber-btn-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary"
@@ -505,6 +506,36 @@ function Hero() {
             initialize_contact
           </a>
         </div>
+      </div>
+      <figure className="panel mx-auto w-full max-w-sm p-3">
+        <div className="mb-3 flex items-center justify-between text-xs text-muted-foreground">
+          <span>
+            <span className="text-accent">&gt;</span> ./whoami --photo
+          </span>
+          <span className="text-terminal">● live</span>
+        </div>
+        <div className="relative overflow-hidden border border-border">
+          <img
+            src="/images/jeoson.jpg"
+            alt="Jeoson Lungsod sitting on a beach, wearing a white cap and white t-shirt"
+            width={960}
+            height={958}
+            fetchPriority="high"
+            decoding="async"
+            className="aspect-[4/5] h-auto w-full object-cover object-[38%_center]"
+          />
+          <div
+            className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background/70 via-transparent to-transparent"
+            aria-hidden="true"
+          />
+        </div>
+        <figcaption className="mt-3 text-xs text-primary">
+          <span aria-hidden="true" className="text-accent">
+            {"// "}
+          </span>
+          subject: jeoson.lungsod · status: online
+        </figcaption>
+      </figure>
       </div>
       <div className="absolute bottom-8 z-10 flex gap-10 text-xs text-muted-foreground">
         <span>

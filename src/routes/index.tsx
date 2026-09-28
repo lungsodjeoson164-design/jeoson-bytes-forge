@@ -133,6 +133,20 @@ const PROJECTS = [
       },
     ],
   },
+  {
+    id: "100",
+    name: "Cyber Threat Monitoring Project",
+    context: "Wireshark · Baselines & Anomaly Hunting",
+    desc: "Completed a hands-on Wireshark threat-monitoring lab, moving from live packet capture and TCP handshake analysis to building a network baseline and hunting the traffic that did not belong.",
+    highlights: [
+      "Captured and analyzed a 24,719-packet live baseline, separating expected traffic such as QUIC, TLS, ARP, SSDP, and mDNS from deliberate activity.",
+      "Traced a web visit from DNS lookup through the TCP three-way handshake, HTTP requests, connection teardown, and a server-issued RST.",
+      "Wrote display filters for NXDOMAIN, resets, retransmissions, ICMP errors, TLS Client Hellos, and non-standard ports across a 363-packet hunt file.",
+      "Built a baseline dossier for a 45,218-packet office capture covering protocol mix, top talkers, external IPs, DNS rate, and scheduled NTP, update, and mDNS traffic.",
+      "Flagged cleartext HTTP credentials on a follow-up capture and mapped anomalies to MITRE ATT&CK techniques.",
+    ],
+    stack: ["Wireshark", "Packet Analysis", "Display Filters", "TCP/IP", "Network Baselining", "MITRE ATT&CK"],
+  },
 ];
 
 const EXPERIENCE = [

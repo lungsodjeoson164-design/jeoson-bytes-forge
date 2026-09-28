@@ -76,27 +76,27 @@ const SKILLS = [
 const PROJECTS = [
   {
     id: "001",
-    name: "SOC Home Lab",
-    desc: "Virtualized security lab for log collection, detection rules and incident-response practice.",
-    stack: ["Splunk", "Kali Linux", "VMs"],
+    name: "Incident Reporting",
+    context: "CTM Quiz · Security Operations",
+    desc: "Investigated a simulated Office 365 credential-theft incident and produced a structured high-severity incident ticket with a verified timeline, indicators of compromise, containment actions, and escalation steps.",
+    highlights: [
+      "Identified six malware and attack patterns, including ransomware, C2 beaconing, network scanning, adware, fileless malware, and a RAT.",
+      "Correlated one unauthorized login with 47 failed attempts from a malicious external IP.",
+      "Documented session revocation, password reset, IP blocking, and Tier 2 escalation.",
+    ],
+    stack: ["Incident Ticketing", "VirusTotal", "Office 365", "Phishing Analysis"],
   },
   {
     id: "010",
-    name: "Threat Intel Triage",
-    desc: "Reputation checks for suspicious files and URLs against VirusTotal, with verdict summaries.",
-    stack: ["VirusTotal", "Automation", "CLI"],
-  },
-  {
-    id: "011",
-    name: "Exposure Audit",
-    desc: "Shodan-driven sweep of open ports and services on my own network, with hardening notes.",
-    stack: ["Shodan", "Recon", "Reporting"],
-  },
-  {
-    id: "100",
-    name: "Packet Sleuth",
-    desc: "Wireshark capture exercises: reading handshakes, spotting anomalies and sketchy traffic.",
-    stack: ["Wireshark", "TCP/IP", "pcap"],
+    name: "Critical Alert Triage",
+    context: "Operation Manila Fog · Full Escalation Simulation",
+    desc: "Triaged a simulated active domain compromise involving a privileged login, rogue Domain Admin creation, and 2.1 GB of outbound data transfer from a domain controller.",
+    highlights: [
+      "Classified all three alerts as true positives and rated the incident Critical.",
+      "Mapped activity to T1078.002, T1136.002, T1098, and T1041.",
+      "Prepared an incident ticket and SBAR escalation with immediate isolation, account disablement, and IP-blocking recommendations.",
+    ],
+    stack: ["SIEM", "EDR", "Firewall Logs", "MITRE ATT&CK", "SBAR"],
   },
 ];
 
@@ -578,9 +578,25 @@ function Projects() {
               <h3 className="font-display text-lg font-bold uppercase tracking-wider text-foreground">
                 {project.name}
               </h3>
-              <p className="mt-3 flex-1 text-sm text-muted-foreground">
+              <p className="mt-2 text-xs uppercase tracking-widest text-terminal">
+                {project.context}
+              </p>
+              <p className="mt-3 text-sm text-muted-foreground">
                 {project.desc}
               </p>
+              <ul className="mt-5 flex-1 space-y-2 border-l border-border pl-4">
+                {project.highlights.map((item) => (
+                  <li
+                    key={item}
+                    className="flex gap-2 text-sm text-muted-foreground"
+                  >
+                    <span aria-hidden="true" className="text-primary">
+                      {">"}
+                    </span>
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
               <div className="mt-5 flex flex-wrap gap-2">
                 {project.stack.map((tech) => (
                   <span key={tech} className="chip">

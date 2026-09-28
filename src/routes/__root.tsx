@@ -84,6 +84,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           "Portfolio of Jeoson Lungsod, IT assistant focused on cybersecurity — threat intel, network analysis, and security monitoring.",
       },
       { name: "author", content: "Jeoson Lungsod" },
+      { name: "theme-color", content: "#0b0f1a" },
+      { name: "color-scheme", content: "dark" },
       { property: "og:title", content: "Jeoson Lungsod — IT Assistant · Cybersecurity" },
       {
         property: "og:description",
@@ -105,7 +107,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       {
         rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=JetBrains+Mono:wght@400;500;700&display=swap",
+        href: "https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap",
       },
       {
         rel: "stylesheet",
@@ -122,8 +124,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootShell({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
+        {/* Flag JS before paint so scroll-reveal content stays visible when JS is unavailable. */}
+        <script
+          dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('js')" }}
+        />
         <HeadContent />
       </head>
       <body>

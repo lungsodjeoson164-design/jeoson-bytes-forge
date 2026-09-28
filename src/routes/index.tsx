@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -17,7 +17,26 @@ export const Route = createFileRoute("/")({
           "IT assistant focused on cybersecurity: threat intelligence, network analysis, and security monitoring.",
       },
       { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:card", content: "summary" },
+      { name: "twitter:title", content: "Jeoson Lungsod — IT Assistant · Cybersecurity" },
+    ],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "Person",
+          name: "Jeoson Lungsod",
+          jobTitle: "IT Assistant",
+          description: "IT assistant focused on cybersecurity.",
+          email: "mailto:hello@jeosonlungsod.dev",
+          knowsAbout: ["Cybersecurity", "Threat Intelligence", "Splunk", "Wireshark", "Kali Linux"],
+          sameAs: [
+            "https://github.com/lungsodjeoson164-design",
+            "https://www.linkedin.com/in/jeoson-lungsod",
+          ],
+        }),
+      },
     ],
   }),
   component: Index,
@@ -109,6 +128,14 @@ function useTypewriter() {
   const [chars, setChars] = useState(0);
 
   useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      const last = TERMINAL_LINES.length - 1;
+      setLineIndex(last);
+      setChars(TERMINAL_LINES[last]?.cmd.length ?? 0);
+    }
+  }, []);
+
+  useEffect(() => {
     const current = TERMINAL_LINES[lineIndex]?.cmd;
     if (!current) return undefined;
     if (chars < current.length) {
@@ -147,21 +174,17 @@ function useReveal() {
   }, []);
 }
 
-function useScrollProgress() {
-  const [progress, setProgress] = useState(0);
+function useScrollFlag(threshold: number) {
+  const [passed, setPassed] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => {
-      const scrollTop = window.scrollY;
-      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-      setProgress(docHeight > 0 ? scrollTop / docHeight : 0);
-    };
+    const onScroll = () => setPassed(window.scrollY > threshold);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  }, [threshold]);
 
-  return progress;
+  return passed;
 }
 
 function useActiveSection() {
@@ -213,11 +236,35 @@ function ScanOverlay() {
   );
 }
 
-function ScrollProgress({ progress }: { progress: number }) {
+function ScrollProgress() {
+  const barRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    let frame = 0;
+    const update = () => {
+      frame = 0;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = docHeight > 0 ? window.scrollY / docHeight : 0;
+      barRef.current?.style.setProperty("transform", `scaleX(${progress})`);
+    };
+    const onScroll = () => {
+      if (!frame) frame = requestAnimationFrame(update);
+    };
+    update();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll, { passive: true });
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
+  }, []);
+
   return (
     <div
+      ref={barRef}
       className="scroll-progress"
-      style={{ transform: `scaleX(${progress})` }}
+      style={{ transform: "scaleX(0)" }}
       aria-hidden="true"
     />
   );
@@ -226,16 +273,18 @@ function ScrollProgress({ progress }: { progress: number }) {
 function Nav() {
   const activeId = useActiveSection();
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
+  const scrolled = useScrollFlag(40);
 
   useLockBody(mobileOpen);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 40);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+    if (!mobileOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setMobileOpen(false);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [mobileOpen]);
 
   const closeMenu = useCallback(() => setMobileOpen(false), []);
 
@@ -294,6 +343,7 @@ function Nav() {
         id="mobile-menu"
         className={`mobile-menu md:hidden ${mobileOpen ? "open" : ""}`}
         aria-hidden={!mobileOpen}
+        inert={!mobileOpen}
       >
         <nav className="flex flex-col gap-2 px-6 py-6" aria-label="Mobile navigation">
           {NAV_LINKS.map((link) => {
@@ -553,7 +603,7 @@ function Experience() {
         <SectionHeading index="04" title="Experience" />
         <div className="space-y-0">
           {EXPERIENCE.map((job, i) => (
-            <div key={job.org} className="relative flex gap-6 pb-10 last:pb-0">
+            <div key={`${job.role}-${job.period}`} className="relative flex gap-6 pb-10 last:pb-0">
               <div className="flex flex-col items-center">
                 <span className="mt-1.5 h-3 w-3 shrink-0 border border-primary bg-primary/30 shadow-[0_0_10px_var(--ring)]" />
                 {i < EXPERIENCE.length - 1 && (
@@ -647,13 +697,7 @@ function Footer() {
 }
 
 function BackToTop() {
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    const onScroll = () => setVisible(window.scrollY > 600);
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  const visible = useScrollFlag(600);
 
   if (!visible) return null;
 
@@ -671,11 +715,10 @@ function BackToTop() {
 
 function Index() {
   useReveal();
-  const scrollProgress = useScrollProgress();
 
   return (
     <div className="relative min-h-screen bg-background text-foreground">
-      <ScrollProgress progress={scrollProgress} />
+      <ScrollProgress />
       <ScanOverlay />
       <Nav />
       <main>

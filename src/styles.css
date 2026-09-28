@@ -176,7 +176,7 @@
   position: fixed;
   left: 0;
   right: 0;
-  top: -20%;
+  top: 0;
   height: 140px;
   z-index: 40;
   pointer-events: none;
@@ -186,15 +186,16 @@
     color-mix(in oklab, var(--primary) 5%, transparent),
     transparent
   );
+  will-change: transform;
   animation: beam 10s linear infinite;
 }
 
 @keyframes beam {
   0% {
-    top: -20%;
+    transform: translate3d(0, -140px, 0);
   }
   100% {
-    top: 120%;
+    transform: translate3d(0, 100vh, 0);
   }
 }
 
@@ -305,13 +306,13 @@
 }
 
 /* Scroll reveal */
-[data-reveal] {
+.js [data-reveal] {
   opacity: 0;
   transform: translateY(24px);
   transition: opacity 0.7s ease, transform 0.7s ease;
 }
 
-[data-reveal].revealed {
+.js [data-reveal].revealed {
   opacity: 1;
   transform: none;
 }
@@ -420,7 +421,7 @@
   max-height: 0;
   border-top: 0 solid transparent;
   background: color-mix(in oklab, var(--background) 95%, transparent);
-  backdrop-blur: md;
+  backdrop-filter: blur(12px);
   transition: max-height 0.3s ease, border-top-color 0.3s ease;
 }
 
@@ -503,7 +504,13 @@ button:focus-visible {
     animation: none;
     transition: none;
   }
-  [data-reveal] {
+  html {
+    scroll-behavior: auto;
+  }
+  .scan-beam {
+    display: none;
+  }
+  .js [data-reveal] {
     opacity: 1;
     transform: none;
     transition: none;

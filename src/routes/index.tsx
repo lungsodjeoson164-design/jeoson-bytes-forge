@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -17,7 +17,26 @@ export const Route = createFileRoute("/")({
           "IT assistant focused on cybersecurity: threat intelligence, network analysis, and security monitoring.",
       },
       { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:card", content: "summary" },
+      { name: "twitter:title", content: "Jeoson Lungsod — IT Assistant · Cybersecurity" },
+    ],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "Person",
+          name: "Jeoson Lungsod",
+          jobTitle: "IT Assistant",
+          description: "IT assistant focused on cybersecurity.",
+          email: "mailto:hello@jeosonlungsod.dev",
+          knowsAbout: ["Cybersecurity", "Threat Intelligence", "Splunk", "Wireshark", "Kali Linux"],
+          sameAs: [
+            "https://github.com/lungsodjeoson164-design",
+            "https://www.linkedin.com/in/jeoson-lungsod",
+          ],
+        }),
+      },
     ],
   }),
   component: Index,
@@ -57,27 +76,76 @@ const SKILLS = [
 const PROJECTS = [
   {
     id: "001",
-    name: "SOC Home Lab",
-    desc: "Virtualized security lab for log collection, detection rules and incident-response practice.",
-    stack: ["Splunk", "Kali Linux", "VMs"],
+    name: "Incident Reporting",
+    context: "CTM Quiz · Security Operations",
+    desc: "Investigated a simulated Office 365 credential-theft incident and produced a structured high-severity incident ticket with a verified timeline, indicators of compromise, containment actions, and escalation steps.",
+    highlights: [
+      "Identified six malware and attack patterns, including ransomware, C2 beaconing, network scanning, adware, fileless malware, and a RAT.",
+      "Correlated one unauthorized login with 47 failed attempts from a malicious external IP.",
+      "Documented session revocation, password reset, IP blocking, and Tier 2 escalation.",
+    ],
+    stack: ["Incident Ticketing", "VirusTotal", "Office 365", "Phishing Analysis"],
   },
   {
     id: "010",
-    name: "Threat Intel Triage",
-    desc: "Reputation checks for suspicious files and URLs against VirusTotal, with verdict summaries.",
-    stack: ["VirusTotal", "Automation", "CLI"],
+    name: "Critical Alert Triage",
+    context: "Operation Manila Fog · Full Escalation Simulation",
+    desc: "Triaged a simulated active domain compromise involving a privileged login, rogue Domain Admin creation, and 2.1 GB of outbound data transfer from a domain controller.",
+    highlights: [
+      "Classified all three alerts as true positives and rated the incident Critical.",
+      "Mapped activity to T1078.002, T1136.002, T1098, and T1041.",
+      "Prepared an incident ticket and SBAR escalation with immediate isolation, account disablement, and IP-blocking recommendations.",
+    ],
+    stack: ["SIEM", "EDR", "Firewall Logs", "MITRE ATT&CK", "SBAR"],
   },
   {
     id: "011",
-    name: "Exposure Audit",
-    desc: "Shodan-driven sweep of open ports and services on my own network, with hardening notes.",
-    stack: ["Shodan", "Recon", "Reporting"],
+    name: "Splunk Security Analytics",
+    context: "BOTS v2 Security Overview",
+    desc: "Built and reviewed a Splunk dashboard for the Boss of the SOC v2 dataset, turning high-volume security events into filterable visual summaries and searchable event evidence.",
+    highlights: [
+      "Summarized 68,870,348 events with filters for sourcetype, host, and time range.",
+      "Compared event distribution by sourcetype, host, and hour of day.",
+      "Reviewed recent HTTP event details across timestamp, host, source, and sourcetype fields.",
+    ],
+    stack: ["Splunk", "BOTS v2", "SPL", "Dashboarding", "Log Analysis"],
+    gallery: [
+      {
+        src: "/images/projects/splunk-overview.png",
+        caption: "BOTS v2 Security Overview",
+        alt: "Splunk dashboard with sourcetype, host, and time range filters showing a total of 68,870,348 events.",
+        width: 1802,
+        height: 502,
+      },
+      {
+        src: "/images/projects/splunk-panels.png",
+        caption: "Panel A — Events by Sourcetype",
+        alt: "Three pie charts showing events by sourcetype, events by host, and events by hour of day.",
+        width: 1800,
+        height: 423,
+      },
+      {
+        src: "/images/projects/splunk-events.png",
+        caption: "Recent Event Detail",
+        alt: "Table of recent stream:http events from host jabbah with time, host, source, and sourcetype columns.",
+        width: 1792,
+        height: 544,
+      },
+    ],
   },
   {
     id: "100",
-    name: "Packet Sleuth",
-    desc: "Wireshark capture exercises: reading handshakes, spotting anomalies and sketchy traffic.",
-    stack: ["Wireshark", "TCP/IP", "pcap"],
+    name: "Cyber Threat Monitoring Project",
+    context: "Wireshark · Baselines & Anomaly Hunting",
+    desc: "Completed a hands-on Wireshark threat-monitoring lab, moving from live packet capture and TCP handshake analysis to building a network baseline and hunting the traffic that did not belong.",
+    highlights: [
+      "Captured and analyzed a 24,719-packet live baseline, separating expected traffic such as QUIC, TLS, ARP, SSDP, and mDNS from deliberate activity.",
+      "Traced a web visit from DNS lookup through the TCP three-way handshake, HTTP requests, connection teardown, and a server-issued RST.",
+      "Wrote display filters for NXDOMAIN, resets, retransmissions, ICMP errors, TLS Client Hellos, and non-standard ports across a 363-packet hunt file.",
+      "Built a baseline dossier for a 45,218-packet office capture covering protocol mix, top talkers, external IPs, DNS rate, and scheduled NTP, update, and mDNS traffic.",
+      "Flagged cleartext HTTP credentials on a follow-up capture and mapped anomalies to MITRE ATT&CK techniques.",
+    ],
+    stack: ["Wireshark", "Packet Analysis", "Display Filters", "TCP/IP", "Network Baselining", "MITRE ATT&CK"],
   },
 ];
 
@@ -107,6 +175,14 @@ const SOCIALS = {
 function useTypewriter() {
   const [lineIndex, setLineIndex] = useState(0);
   const [chars, setChars] = useState(0);
+
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      const last = TERMINAL_LINES.length - 1;
+      setLineIndex(last);
+      setChars(TERMINAL_LINES[last]?.cmd.length ?? 0);
+    }
+  }, []);
 
   useEffect(() => {
     const current = TERMINAL_LINES[lineIndex]?.cmd;
@@ -147,21 +223,17 @@ function useReveal() {
   }, []);
 }
 
-function useScrollProgress() {
-  const [progress, setProgress] = useState(0);
+function useScrollFlag(threshold: number) {
+  const [passed, setPassed] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => {
-      const scrollTop = window.scrollY;
-      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-      setProgress(docHeight > 0 ? scrollTop / docHeight : 0);
-    };
+    const onScroll = () => setPassed(window.scrollY > threshold);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  }, [threshold]);
 
-  return progress;
+  return passed;
 }
 
 function useActiveSection() {
@@ -213,11 +285,35 @@ function ScanOverlay() {
   );
 }
 
-function ScrollProgress({ progress }: { progress: number }) {
+function ScrollProgress() {
+  const barRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    let frame = 0;
+    const update = () => {
+      frame = 0;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = docHeight > 0 ? window.scrollY / docHeight : 0;
+      barRef.current?.style.setProperty("transform", `scaleX(${progress})`);
+    };
+    const onScroll = () => {
+      if (!frame) frame = requestAnimationFrame(update);
+    };
+    update();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll, { passive: true });
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
+  }, []);
+
   return (
     <div
+      ref={barRef}
       className="scroll-progress"
-      style={{ transform: `scaleX(${progress})` }}
+      style={{ transform: "scaleX(0)" }}
       aria-hidden="true"
     />
   );
@@ -226,16 +322,18 @@ function ScrollProgress({ progress }: { progress: number }) {
 function Nav() {
   const activeId = useActiveSection();
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
+  const scrolled = useScrollFlag(40);
 
   useLockBody(mobileOpen);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 40);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+    if (!mobileOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setMobileOpen(false);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [mobileOpen]);
 
   const closeMenu = useCallback(() => setMobileOpen(false), []);
 
@@ -294,6 +392,7 @@ function Nav() {
         id="mobile-menu"
         className={`mobile-menu md:hidden ${mobileOpen ? "open" : ""}`}
         aria-hidden={!mobileOpen}
+        inert={!mobileOpen}
       >
         <nav className="flex flex-col gap-2 px-6 py-6" aria-label="Mobile navigation">
           {NAV_LINKS.map((link) => {
@@ -371,16 +470,17 @@ function Hero() {
   return (
     <section
       id="top"
-      className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-6 pt-14"
+      className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-6 pb-24 pt-20"
     >
       <div className="cyber-grid absolute inset-0" aria-hidden="true" />
-      <div className="relative z-10 flex w-full max-w-5xl flex-col items-center text-center">
+      <div className="relative z-10 grid w-full max-w-6xl items-center gap-12 lg:grid-cols-[1.5fr_1fr]">
+      <div className="flex flex-col items-center text-center lg:items-start lg:text-left">
         <p className="mb-6 text-sm text-muted-foreground">
           <span className="text-accent">&gt;</span> initializing portfolio
           <span className="blink">_</span>
         </p>
         <h1
-          className="glitch font-display text-5xl font-black uppercase tracking-wider text-foreground text-glow sm:text-6xl md:text-7xl"
+          className="glitch font-display text-5xl font-black uppercase tracking-wider text-foreground text-glow sm:text-6xl md:text-7xl lg:text-5xl xl:text-6xl"
           data-text="JEOSON LUNGSOD"
         >
           JEOSON LUNGSOD
@@ -392,7 +492,7 @@ function Hero() {
         <div className="mt-10 w-full">
           <Terminal />
         </div>
-        <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
+        <div className="mt-10 flex flex-wrap items-center justify-center gap-4 lg:justify-start">
           <a
             href="#projects"
             className="cyber-btn-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary"
@@ -406,6 +506,36 @@ function Hero() {
             initialize_contact
           </a>
         </div>
+      </div>
+      <figure className="panel mx-auto w-full max-w-sm p-3">
+        <div className="mb-3 flex items-center justify-between text-xs text-muted-foreground">
+          <span>
+            <span className="text-accent">&gt;</span> ./whoami --photo
+          </span>
+          <span className="text-terminal">● live</span>
+        </div>
+        <div className="relative overflow-hidden border border-border">
+          <img
+            src="/images/jeoson.jpg"
+            alt="Jeoson Lungsod sitting on a beach, wearing a white cap and white t-shirt"
+            width={960}
+            height={958}
+            fetchPriority="high"
+            decoding="async"
+            className="aspect-[4/5] h-auto w-full object-cover object-[38%_center]"
+          />
+          <div
+            className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background/70 via-transparent to-transparent"
+            aria-hidden="true"
+          />
+        </div>
+        <figcaption className="mt-3 text-xs text-primary">
+          <span aria-hidden="true" className="text-accent">
+            {"// "}
+          </span>
+          subject: jeoson.lungsod · status: online
+        </figcaption>
+      </figure>
       </div>
       <div className="absolute bottom-8 z-10 flex gap-10 text-xs text-muted-foreground">
         <span>
@@ -528,9 +658,58 @@ function Projects() {
               <h3 className="font-display text-lg font-bold uppercase tracking-wider text-foreground">
                 {project.name}
               </h3>
-              <p className="mt-3 flex-1 text-sm text-muted-foreground">
+              <p className="mt-2 text-xs uppercase tracking-widest text-terminal">
+                {project.context}
+              </p>
+              <p className="mt-3 text-sm text-muted-foreground">
                 {project.desc}
               </p>
+              <ul className="mt-5 flex-1 space-y-2 border-l border-border pl-4">
+                {project.highlights.map((item) => (
+                  <li
+                    key={item}
+                    className="flex gap-2 text-sm text-muted-foreground"
+                  >
+                    <span aria-hidden="true" className="text-primary">
+                      {">"}
+                    </span>
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+              {"gallery" in project && project.gallery && (
+                <div className="mt-5 flex flex-col gap-4">
+                  {project.gallery.map((shot) => (
+                    <figure
+                      key={shot.src}
+                      className="border border-border bg-background/40 p-2"
+                    >
+                      <a
+                        href={shot.src}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label={`Open full-size screenshot: ${shot.caption}`}
+                      >
+                        <img
+                          src={shot.src}
+                          alt={shot.alt}
+                          width={shot.width}
+                          height={shot.height}
+                          loading="lazy"
+                          decoding="async"
+                          className="h-auto w-full"
+                        />
+                      </a>
+                      <figcaption className="mt-2 text-xs text-primary">
+                        <span aria-hidden="true" className="text-accent">
+                          {"// "}
+                        </span>
+                        {shot.caption}
+                      </figcaption>
+                    </figure>
+                  ))}
+                </div>
+              )}
               <div className="mt-5 flex flex-wrap gap-2">
                 {project.stack.map((tech) => (
                   <span key={tech} className="chip">
@@ -553,7 +732,7 @@ function Experience() {
         <SectionHeading index="04" title="Experience" />
         <div className="space-y-0">
           {EXPERIENCE.map((job, i) => (
-            <div key={job.org} className="relative flex gap-6 pb-10 last:pb-0">
+            <div key={`${job.role}-${job.period}`} className="relative flex gap-6 pb-10 last:pb-0">
               <div className="flex flex-col items-center">
                 <span className="mt-1.5 h-3 w-3 shrink-0 border border-primary bg-primary/30 shadow-[0_0_10px_var(--ring)]" />
                 {i < EXPERIENCE.length - 1 && (
@@ -647,13 +826,7 @@ function Footer() {
 }
 
 function BackToTop() {
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    const onScroll = () => setVisible(window.scrollY > 600);
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  const visible = useScrollFlag(600);
 
   if (!visible) return null;
 
@@ -671,11 +844,10 @@ function BackToTop() {
 
 function Index() {
   useReveal();
-  const scrollProgress = useScrollProgress();
 
   return (
     <div className="relative min-h-screen bg-background text-foreground">
-      <ScrollProgress progress={scrollProgress} />
+      <ScrollProgress />
       <ScanOverlay />
       <Nav />
       <main>

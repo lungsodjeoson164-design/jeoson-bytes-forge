@@ -147,6 +147,43 @@ const PROJECTS = [
     ],
     stack: ["Wireshark", "Packet Analysis", "Display Filters", "TCP/IP", "Network Baselining", "MITRE ATT&CK"],
   },
+  {
+    id: "101",
+    name: "Nmap Network Reconnaissance",
+    context: "Kali Linux · Metasploitable 2 Lab",
+    desc: "Worked through six hands-on Nmap labs in an isolated VirtualBox network, progressing from host discovery to full service enumeration, scan-type comparison, and NSE script reconnaissance against intentionally vulnerable targets.",
+    highlights: [
+      "Ran a full-port service scan (nmap -sV -p-) against Metasploitable 2 and enumerated 30 open TCP ports with versions in 146 seconds.",
+      "Flagged outdated, high-risk services including vsftpd 2.3.4, UnrealIRCd, a bindshell on 1524, and Samba 3.x for CVE research.",
+      "Compared -sS, -sT, and -sU scans while capturing traffic in Wireshark, isolating SYN and SYN/ACK behavior with tcp.flags.syn == 1.",
+      "Used NSE discovery scripts to map broadcast-ping hosts, IPv6 multicast listeners, LLMNR, and SSDP activity on the lab subnet.",
+      "Kept all scanning inside a host-only lab network, following safe and authorized testing practice.",
+    ],
+    stack: ["Nmap", "Kali Linux", "Metasploitable 2", "NSE", "Wireshark", "Reconnaissance"],
+    gallery: [
+      {
+        src: "/images/projects/nmap-service-scan.png",
+        caption: "Service & Version Scan — Metasploitable 2",
+        alt: "Kali Linux terminal showing nmap -sV -p- results against 192.168.56.101 listing open ports such as vsftpd 2.3.4, OpenSSH, Samba, and MySQL.",
+        width: 1906,
+        height: 970,
+      },
+      {
+        src: "/images/projects/nmap-syn-capture.png",
+        caption: "Scan Comparison — SYN Traffic in Wireshark",
+        alt: "Wireshark capture filtered with tcp.flags.syn == 1 showing SYN and SYN/ACK packets and highlighted TCP retransmissions.",
+        width: 1917,
+        height: 1078,
+      },
+      {
+        src: "/images/projects/nmap-nse-discovery.png",
+        caption: "NSE Discovery Script Results",
+        alt: "Terminal output of nmap --script=discovery showing broadcast-ping hosts and IPv6 multicast listener details.",
+        width: 909,
+        height: 793,
+      },
+    ],
+  },
 ];
 
 const EXPERIENCE = [
